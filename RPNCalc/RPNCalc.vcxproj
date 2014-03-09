@@ -118,10 +118,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="intstack.h" />
-    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="intstack.obj">
