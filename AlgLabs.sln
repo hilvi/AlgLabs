@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "measurement", "measurement\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RPNCalc", "RPNCalc\RPNCalc.vcxproj", "{9AF14210-EAC9-4AC2-8176-B9F2A6870866}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Queue", "Queue\Queue.vcxproj", "{2D340057-A267-496B-909E-FB9C29E88C27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -69,6 +71,12 @@ Global
 		{9AF14210-EAC9-4AC2-8176-B9F2A6870866}.Release|Win32.Build.0 = Release|Win32
 		{9AF14210-EAC9-4AC2-8176-B9F2A6870866}.Release|x64.ActiveCfg = Release|x64
 		{9AF14210-EAC9-4AC2-8176-B9F2A6870866}.Release|x64.Build.0 = Release|x64
+		{2D340057-A267-496B-909E-FB9C29E88C27}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2D340057-A267-496B-909E-FB9C29E88C27}.Debug|Win32.Build.0 = Debug|Win32
+		{2D340057-A267-496B-909E-FB9C29E88C27}.Debug|x64.ActiveCfg = Debug|Win32
+		{2D340057-A267-496B-909E-FB9C29E88C27}.Release|Win32.ActiveCfg = Release|Win32
+		{2D340057-A267-496B-909E-FB9C29E88C27}.Release|Win32.Build.0 = Release|Win32
+		{2D340057-A267-496B-909E-FB9C29E88C27}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
