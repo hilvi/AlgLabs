@@ -9,24 +9,10 @@
 #include <conio.h>
 #include <ctype.h>
 #include <memory.h>
-typedef char Titem;
-
-/* The interface of queue */
-#define INCREMENT 3
-typedef enum {NOT_OK, OK } Tboolean;
-typedef struct {
-    Titem *array;
-    int   number_of_items;
-	int   size;
-} Tqueue;
-void initialize_queue (Tqueue *Pqueue);
-Tboolean enqueue(Tqueue *p, Titem item);
-Tboolean dequeue(Tqueue *p, Titem *Pitem);
-void print_queue(const Tqueue *Pqueue);
-
+#include "cirque.h"
 
 /* Application */
-int main() {
+/*int main() {
     Tqueue queue;
     Tboolean succeed;
     char chr;
@@ -55,56 +41,75 @@ int main() {
 
 		chr = _getche();
      }
-}
+}*/
 
 /* The implementations of operation functions of the queue */
 void initialize_queue ( Tqueue *Pqueue)  {
-    Pqueue->number_of_items = 0;
 	Pqueue->array = (Titem *)malloc(sizeof(Titem) * INCREMENT);
 	Pqueue->size = INCREMENT;
+	Pqueue->first = 0;
+	Pqueue->last = -1;
+	Pqueue->number_of_items = 0;
 }
 
 Tboolean enqueue( Tqueue *Pqueue, Titem item) {
 	if (Pqueue->number_of_items >= Pqueue->size) {
+		if(!incrementSize(Pqueue))
+			return NOT_OK;
+	}
+    
+	if(++Pqueue->last >= Pqueue->size)
+		Pqueue->last = 0;
+
+	Pqueue->array[Pqueue->last] = item;
+	Pqueue->number_of_items++;
+	return (OK);
+}
+
+Tboolean incrementSize(Tqueue *Pqueue) {
 		int newSize = Pqueue->size + INCREMENT;
 		Titem *newArray = (Titem *)malloc(sizeof(Titem)*newSize);
 
 		if(newArray == NULL)
 			return NOT_OK;
 
-		memcpy(newArray, Pqueue->array, Pqueue->size);
+		memcpy(newArray, &Pqueue->array[Pqueue->first], sizeof(Titem) * (Pqueue->size - Pqueue->first));
+		memcpy(&newArray[Pqueue->size - Pqueue->first], Pqueue->array, sizeof(Titem) * Pqueue->first);
+		
 		free(Pqueue->array);
-
 		Pqueue->array = newArray;
+		Pqueue->first = 0;
+		Pqueue->last = Pqueue->number_of_items-1;
 		Pqueue->size = newSize;
-		printf("Size incremented to %d\n", newSize);
-	}
-    
-	Pqueue->array[Pqueue->number_of_items++] = item;
-	return (OK);
+		//printf("Size incremented to %d\n", newSize);
+
+		return OK;
 }
 
 Tboolean dequeue( Tqueue *Pqueue, Titem *Pitem) {
-    int i;
-
     if (Pqueue->number_of_items == 0)
 		return(NOT_OK);
     else {
-        *Pitem = Pqueue->array[0];
-        for (i = 0 ; i < Pqueue->number_of_items-1 ; i++)
-            Pqueue->array[i] = Pqueue->array[i+1];
-        Pqueue->number_of_items--;
+		Pqueue->number_of_items--;
+        *Pitem = Pqueue->array[Pqueue->first];
+
+		if(++Pqueue->first >= Pqueue->size)
+			Pqueue->first = 0;
 
 		return (OK);
     }
 }
 
 void print_queue (const Tqueue *Pqueue) {
-    int i;
+    int i, index;
 
     printf("\nQueue now: \n\n");
-    for (i = 0 ; i <  Pqueue->number_of_items ; i++ ) {
-		printf(" %c ", Pqueue->array[i]);
+    for (i = 0, index = Pqueue->first; i <  Pqueue->number_of_items ; i++, index++) {
+		if(index >= Pqueue->size)
+			index = 0;
+
+		printf(" %d ", Pqueue->array[index]);
     }
+	printf("\nFirst: %d Last: %d Items: %d Size: %d", Pqueue->first, Pqueue->last, Pqueue->number_of_items, Pqueue->size);
     printf("\n\n");
 }
