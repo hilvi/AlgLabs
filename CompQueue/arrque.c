@@ -8,49 +8,35 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <ctype.h>
-#include <memory.h>
-#include "cirque.h"
+#include <string.h>
+#include "arrque.h"
 
-/* Application */
-/*int main() {
-    Tqueue queue;
-    Tboolean succeed;
-    char chr;
-
-    initialize_queue(&queue);
-    printf("\nEnter a letter to be queued ");
-    printf("\nor digit 1 to dequeue a letter");
-    printf("\nor Return to quit a program\n");
-
-    chr = _getche();
-    while (chr != '\n' && chr != '\r') {
-        if (isalpha(chr)) {
-			succeed=enqueue(&queue, chr);
-			print_queue(&queue);
-			if (!succeed)
-				printf("\n Enqueue operation failed\n");
-		}
-		if (chr == '1') {
-			succeed = dequeue(&queue, &chr);
-			if  (succeed) {
-				printf("\na letter dequeued %c ", chr);
-				print_queue(&queue);
-			} else
-				printf("\nDequeue operation failed\n ");
-		}
-
-		chr = _getche();
-     }
-}*/
+Tboolean enqueue_cir( Tqueue Pqueue, Titem item);
+Tboolean enqueue_arr( Tqueue Pqueue, Titem item);
+Tboolean incrementSize_cir(Tqueue Pqueue);
+Tboolean incrementSize_arr(Tqueue Pqueue);
+Tboolean dequeue_cir( Tqueue Pqueue, Titem *Pitem);
+Tboolean dequeue_arr( Tqueue Pqueue, Titem *Pitem);
 
 /* The implementations of operation functions of the queue */
-Tqueue CreateQueue()  {
+Tqueue CreateQueue(Tboolean circular)  {
 	Tqueue Pqueue = (Tqueue)malloc(sizeof(Tqueue));
 	Pqueue->array = (Titem *)malloc(sizeof(Titem) * INCREMENT);
 	Pqueue->size = INCREMENT;
 	Pqueue->first = 0;
 	Pqueue->last = -1;
 	Pqueue->number_of_items = 0;
+	Pqueue->circular = circular;
+
+	if(circular) {
+		Pqueue->enq = enqueue_cir;
+		Pqueue->deq = dequeue_cir;
+		Pqueue->inc = incrementSize_cir;
+	} else {
+		Pqueue->enq = enqueue_arr;
+		Pqueue->deq = dequeue_arr;
+		Pqueue->inc = incrementSize_arr;
+	}
 }
 
 void DestroyQueue(Tqueue p) {
@@ -59,8 +45,12 @@ void DestroyQueue(Tqueue p) {
 }
 
 Tboolean enqueue( Tqueue Pqueue, Titem item) {
+	Pqueue->enq(Pqueue, item);
+}
+
+Tboolean enqueue_cir( Tqueue Pqueue, Titem item) {
 	if (Pqueue->number_of_items >= Pqueue->size) {
-		if(!incrementSize(Pqueue))
+		if(!Pqueue->inc(Pqueue))
 			return NOT_OK;
 	}
     
@@ -72,7 +62,21 @@ Tboolean enqueue( Tqueue Pqueue, Titem item) {
 	return (OK);
 }
 
+Tboolean enqueue_arr( Tqueue Pqueue, Titem item) {
+	if (Pqueue->number_of_items >= Pqueue->size) {
+		if(!Pqueue->inc(Pqueue))
+			return NOT_OK;
+	}
+    
+	Pqueue->array[Pqueue->number_of_items++] = item;
+	return (OK);
+}
+
 Tboolean incrementSize(Tqueue Pqueue) {
+	Pqueue->inc(Pqueue);
+}
+
+Tboolean incrementSize_cir(Tqueue Pqueue) {
 		int newSize = Pqueue->size + INCREMENT;
 		Titem *newArray = (Titem *)malloc(sizeof(Titem)*newSize);
 
@@ -92,7 +96,30 @@ Tboolean incrementSize(Tqueue Pqueue) {
 		return OK;
 }
 
-Tboolean dequeue( Tqueue Pqueue, Titem *Pitem) {
+Tboolean incrementSize_arr(Tqueue Pqueue) {
+		int newSize = Pqueue->size + INCREMENT;
+		Titem *newArray = (Titem *)malloc(sizeof(Titem)*newSize);
+
+		printf("\nFirst: %d Last: %d Items: %d Size: %d", Pqueue->first, Pqueue->last, Pqueue->number_of_items, Pqueue->size);
+
+		if(newArray == NULL)
+			return NOT_OK;
+
+		memcpy((void *)newArray, (void *)Pqueue->array, sizeof(Titem)*Pqueue->size);
+		free(Pqueue->array);
+
+		Pqueue->array = newArray;
+		Pqueue->size = newSize;
+		//printf("Size incremented to %d\n", newSize);
+
+		return OK;
+}
+
+Tboolean dequeue( Tqueue Pqueue, Titem *item) {
+	Pqueue->deq(Pqueue, item);
+}
+
+Tboolean dequeue_cir( Tqueue Pqueue, Titem *Pitem) {
     if (Pqueue->number_of_items == 0)
 		return(NOT_OK);
     else {
@@ -101,6 +128,21 @@ Tboolean dequeue( Tqueue Pqueue, Titem *Pitem) {
 
 		if(++Pqueue->first >= Pqueue->size)
 			Pqueue->first = 0;
+
+		return (OK);
+    }
+}
+
+Tboolean dequeue_arr( Tqueue Pqueue, Titem *Pitem) {
+    int i;
+
+    if (Pqueue->number_of_items == 0)
+		return(NOT_OK);
+    else {
+        *Pitem = Pqueue->array[0];
+        for (i = 0 ; i < Pqueue->number_of_items-1 ; i++)
+            Pqueue->array[i] = Pqueue->array[i+1];
+        Pqueue->number_of_items--;
 
 		return (OK);
     }

@@ -18,20 +18,18 @@
 #define N 100000
 
 int main() { 
-	Tqueue queue; 
+	Tqueue queue = CreateQueue(); 
 	Titem item; 
 	clock_t tic, tac; 
 	double duration; 
 	int i; 
-
-	initialize_queue(&queue); 
 
 	// first we play a little with the queue to test that it really works 
 	printf("Fill the queue with %d items\n", N); 
 	item = 0;
 	
 	for (i = 0; i < N; i++) { 
-		if (enqueue(&queue, item++) != OK) { 
+		if (enqueue(queue, item++) != OK) { 
 			fprintf(stderr, "Enqueue failed\n"); 
 			exit(1); 
 		} 
@@ -39,7 +37,7 @@ int main() {
 
 	printf("Remove half of them\n"); 
 	for (i = 0; i < N/2; i++) { 
-		if (dequeue(&queue, &item) != OK) {
+		if (dequeue(queue, &item) != OK) {
 			fprintf(stderr, "Dequeue failed\n"); 
 			exit(1); 
 		} 
@@ -48,7 +46,7 @@ int main() {
 
 	item++; 
 	for (i = 0; i < N/2; i++) { 
-		if (enqueue(&queue, item++) != OK) { 
+		if (enqueue(queue, item++) != OK) { 
 			fprintf(stderr, "Enqueue failed\n"); 
 			exit(1); 
 		} 
@@ -58,7 +56,7 @@ int main() {
 	printf("Then dequeue them\n"); 
 	tic = clock(); 
 	for (i = 0; i < N; i++) {
-		dequeue(&queue, &item); 
+		dequeue(queue, &item); 
 	}
 	tac = clock(); 
 	printf("Last item value %d (should be %d)\n", item, N-1); 
