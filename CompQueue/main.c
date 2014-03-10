@@ -13,7 +13,7 @@
 #include <math.h> 
 #include "arrque.h" 
 
-#define N 3 // number of test iterations, must be even 
+#define N 1000000 // number of test iterations, must be even 
 
 
 /* test the operation of the dequeue/enqueue operations, 
@@ -58,16 +58,19 @@ int main() {
 
 	queue = CreateQueue(NOT_OK); 
 	printf("First the simple array implementation\n"); 
-	printf("dequeue() took %lf us to run\n", Ta = measureQueue(queue, N)*1e6); 
+	printf("dequeue() took %lf us to run\n", Ta = measureQueue(queue, N)*1e6);
 	DestroyQueue(queue); 
 
 	queue = CreateQueue(OK); 
 	printf("\nThen the circular array implementation\n"); 
-	printf("dequeue() took %lf us to run\n", Tc = measureQueue(queue, N)*1e6); 
+	printf("dequeue() took %lf us to run\n", Tc = measureQueue(queue, N)*1e6);
 	DestroyQueue(queue); 
 
 	if (Tc != 0.0) 
 		printf("\nCircular implementation was %d times faster than array implementation\n", (int)floor(Ta/Tc + .5)); 
 	else 
-		printf("\nNo circular implmentation measurement available\n"); 
+		printf("\nNo circular implmentation measurement available\n");
+
+	fflush(stdin);
+	getchar();
 } 

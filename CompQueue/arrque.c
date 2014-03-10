@@ -20,7 +20,7 @@ Tboolean dequeue_arr( Tqueue Pqueue, Titem *Pitem);
 
 /* The implementations of operation functions of the queue */
 Tqueue CreateQueue(Tboolean circular)  {
-	Tqueue Pqueue = (Tqueue)malloc(sizeof(Tqueue));
+	Tqueue Pqueue = (Tqueue)malloc(sizeof(*Pqueue));
 	Pqueue->array = (Titem *)malloc(sizeof(Titem) * INCREMENT);
 	Pqueue->size = INCREMENT;
 	Pqueue->first = 0;
@@ -43,7 +43,7 @@ Tqueue CreateQueue(Tboolean circular)  {
 
 void DestroyQueue(Tqueue p) {
 	free(p->array);
-	//free(p);
+	free(p);
 }
 
 Tboolean enqueue( Tqueue Pqueue, Titem item) {
