@@ -13,7 +13,17 @@
 #include <math.h> 
 #include "arrque.h" 
 
-#define N 1000000 // number of test iterations, must be even 
+/*
+DEBUG N=400000
+Array-memcpy	799.21255us
+circular		0.07 us -> 11417 kertaa nopeampi
+
+OPTIMOITU N=400000
+Array-memcpy	220.4us
+circular		0.005us -> 44801 kertaa nopeampi
+*/
+
+#define N 100000 // number of test iterations, must be even 
 
 
 /* test the operation of the dequeue/enqueue operations, 
