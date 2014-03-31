@@ -32,7 +32,8 @@ void cleanup_list(Tlist *list);
 
 void delete_first(Tlist *list);
 void delete_last(Tlist *list);
-int find_pos_in_list(const Tlist *list, Titem item, int *pos);
+int find_pos_in_list(const Tlist *list, Titem item, int *pos);
+
 
 // Application
 int main (void)  {
@@ -98,10 +99,20 @@ void insert_to_list_end(Tlist *list, Titem data) {
 		*list = newnode;       //first node
 	} else {
 		Tpointer node = *list;
-		while(node->next != NULL) {
+		Tpointer prev = NULL;
+		while(node != NULL) {
+			if(node->item > data) {
+				newnode->next = node;
+				if(prev != NULL)
+					prev->next = newnode;
+				else
+					*list = newnode;
+				return;
+			}
+			prev = node;
 			node = node->next;
 		}
-		node->next = newnode;
+		prev->next = newnode;
 	}
 }
 
@@ -137,7 +148,7 @@ void delete_last(Tlist *list) {
 	}
 }
 int find_pos_in_list(const Tlist *list, Titem item, int *pos) {
-	int i = 0;
+	int i = 1;
 	Tpointer node = *list;
 	while(node != NULL) {
 		if(node->item == item) {
@@ -147,5 +158,5 @@ int find_pos_in_list(const Tlist *list, Titem item, int *pos) {
 		++i;
 		node = node->next;
 	}
-	return -1;
+	return 0;
 }
